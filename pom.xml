@@ -5,8 +5,12 @@
     <groupId>com.thingslink</groupId>
     <artifactId>thingslink</artifactId>
     <version>1.0.0</version>
+    <modules>
+        <module>things-link-core</module>
+        <module>things-link-transport</module>
+    </modules>
     <packaging>pom</packaging>
-    <name>Things-Link</name>
+    <name>ThingsLink</name>
 
 
     <dependencyManagement>
