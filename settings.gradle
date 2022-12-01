@@ -1,3 +1,5 @@
 include 'things-link-core'
 include 'things-link-transport'
+include 'things-link-transport:things-link-transport-api'
+findProject(':things-link-transport:things-link-transport-api')?.name = 'things-link-transport-api'
 

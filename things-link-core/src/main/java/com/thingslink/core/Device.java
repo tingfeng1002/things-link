@@ -12,4 +12,11 @@ public interface Device {
      */
     EntityId getDeviceId();
 
+
+    /**
+     * 获取产品id
+     * @return 产品id
+     */
+    EntityId getProductId();
+
 }
