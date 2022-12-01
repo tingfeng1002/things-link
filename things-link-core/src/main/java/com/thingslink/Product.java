@@ -1,4 +1,6 @@
-package com.thingslink.core;
+package com.thingslink;
+
+import com.thingslink.id.EntityId;
 
 /**
  * @author wang xiao
@@ -8,7 +10,7 @@ public interface Product {
 
     /**
      * 获取产品id
-     * @return product id
+     * @return 产品id
      */
     EntityId getProductId();
 }
