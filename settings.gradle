@@ -1,5 +1,0 @@
-rootProject.name = 'things-link'
-
-include 'things-link-core'
-include 'things-link-transport'
-
