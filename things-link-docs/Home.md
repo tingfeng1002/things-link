@@ -12,6 +12,6 @@
 - things-link-core: 核心模块,主要提供抽象类与接口
 - things-link-cache: 缓存模块，针对多种缓存的实现，默认是内存缓存
 - things-link-queue: 消息队列模块，默认是内存消息队列
-- things-link-queue: 设备连接层，提供设备连接能力
+- things-link-transport: 设备连接层，提供设备连接能力
 - things-link-ui: 前端界面
 - things-link-ws: websocket 推送
