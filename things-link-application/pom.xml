@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>things-link-ws</artifactId>
-    <name>ThingsLink-Ws</name>
+    <artifactId>things-link-application</artifactId>
+    <name>ThingsLink-Application</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
