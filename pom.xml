@@ -11,14 +11,58 @@
         <module>things-link-queue</module>
         <module>things-link-ws</module>
         <module>things-link-cache</module>
+        <module>things-link-application</module>
     </modules>
     <packaging>pom</packaging>
-    <name>ThingsLink</name>
 
+    <name>ThingsLink</name>
+    <url>https://github.com/tingfeng1002/things-link</url>
+    <inceptionYear>2022</inceptionYear>
+
+    <properties>
+
+    </properties>
 
     <dependencyManagement>
+        <dependencies>
 
+        </dependencies>
     </dependencyManagement>
 
+    <developers>
+        <developer>
+            <id>wang xiao</id>
+            <name>王潇</name>
+            <email>wxiao1002@yeah.net</email>
+        </developer>
+    </developers>
+
+    <repositories>
+        <repository>
+            <id>nexus-ali-yun</id>
+            <name>nexus-ali-yun</name>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus-ali-yun</id>
+            <name>nexus-ali-yun</name>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>
