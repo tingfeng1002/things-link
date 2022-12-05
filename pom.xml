@@ -8,6 +8,9 @@
     <modules>
         <module>things-link-core</module>
         <module>things-link-transport</module>
+        <module>things-link-queue</module>
+        <module>things-link-ws</module>
+        <module>things-link-cache</module>
     </modules>
     <packaging>pom</packaging>
     <name>ThingsLink</name>

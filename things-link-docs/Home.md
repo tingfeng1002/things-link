@@ -7,6 +7,8 @@
 
 ## 目录结构说明
 
-
+- config : 配置文件信息
+- things-link-core : 核心基础类
+- 
 
 
