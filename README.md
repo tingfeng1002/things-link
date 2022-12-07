@@ -13,17 +13,17 @@
 
 ## 文档
 
-- [设计文档](things-link-docs/home.md) 
+- [设计文档](https://github.com/tingfeng1002/things-link/blob/main/things-link-docs/home.md) 
 
 ## 快速开始
 
 1. 定义产品，产品中约束设备的协议与payload 数据格式
 2. 创建设备，自动分发设备连接方式所需的密钥等信息
-3. 设备连接，[参考连接文章](things-link-docs/transport.md)
+3. 设备连接，[参考连接文章](https://github.com/tingfeng1002/things-link/blob/main/things-link-docs/transport.md)
 4. 在线调试与数据转发
 
 ## 参与贡献
 
-[开发文档](things-link-docs/develop.md)
+[开发文档](https://github.com/tingfeng1002/things-link/blob/main/things-link-docs/develop.md)
 ## Licenses
 
