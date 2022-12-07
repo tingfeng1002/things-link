@@ -12,6 +12,7 @@
         <module>things-link-ws</module>
         <module>things-link-cache</module>
         <module>things-link-application</module>
+        <module>things-link-rule</module>
     </modules>
     <packaging>pom</packaging>
 
