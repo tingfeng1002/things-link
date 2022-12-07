@@ -1,3 +1,6 @@
 spring:
   application:
     name: ThingsLink
+
+server:
+  port: ${THINGS_LINK_WEB_PORT:8080}
