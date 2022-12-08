@@ -5,7 +5,7 @@ package com.thingslink;
  * @author wang xiao
  * date 2022/12/1
  */
-public enum EntityType {
+public enum ThingsType {
 
     /**
      * 设备
@@ -13,7 +13,7 @@ public enum EntityType {
     DEVICE,
 
     /**
-     * 产品
+     * 模型
      */
-    PRODUCT,
+    MODEL,
 }

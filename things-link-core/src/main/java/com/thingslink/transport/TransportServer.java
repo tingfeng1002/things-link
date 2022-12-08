@@ -11,4 +11,21 @@ public interface TransportServer {
      * @return 服务名
      */
     String getServerName();
+
+
+    /**
+     * 初始化
+     */
+    void initialize();
+
+    /**
+     * 启动
+     */
+    void  start();
+
+
+    /**
+     * 关闭
+     */
+    void stop();
 }

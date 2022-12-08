@@ -1,10 +1,11 @@
 package com.thingslink;
 
 /**
+ * 实体id
  * @author wang xiao
  * date 2022/12/1
  */
-public interface EntityId {
+public interface ThingsId {
 
     /**
      * 获取id
@@ -16,5 +17,5 @@ public interface EntityId {
      * 获取类型
      * @return 实体类型
      */
-    EntityType getEntityType();
+    ThingsType getThingsType();
 }

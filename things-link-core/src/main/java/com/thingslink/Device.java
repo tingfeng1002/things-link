@@ -5,19 +5,17 @@ package com.thingslink;
  * @author wang xiao
  * date 2022/12/1
  */
-public interface Device {
-
-    /**
-     * 获取设备id
-     * @return  EntityId
-     */
-    EntityId getDeviceId();
-
+public interface Device extends Things{
 
 
     /**
-     * 获取产品id
+     * 获取模型id
      * @return  EntityId
      */
-    EntityId  getProductId();
+    ThingsId getModelId();
 }
+
+
+
+
+
