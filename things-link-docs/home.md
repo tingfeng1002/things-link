@@ -16,6 +16,6 @@
 - things-link-transport: 设备连接层，提供设备连接能力
 - things-link-ui: 前端界面
 - things-link-ws: websocket 推送
-- things-link-rule: 规则配置
+- things-link-rule: 规则配置,提供转发与告警处理
 
-#
+
