@@ -27,6 +27,7 @@
         <mybatis-spring-version>2.3</mybatis-spring-version>
         <netty-version>4.1.85.Final</netty-version>
         <guava-version>31.1-jre</guava-version>
+        <things-link-version>1.0.0</things-link-version>
     </properties>
 
     <dependencyManagement>
@@ -58,6 +59,13 @@
                 <version>${guava-version}</version>
             </dependency>
 
+            <!--thingsLink-->
+            <dependency>
+                <groupId>com.thingslink</groupId>
+                <artifactId>things-link-core</artifactId>
+                <version>${things-link-version}</version>
+                <scope>compile</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
