@@ -7,14 +7,7 @@
         <groupId>com.thingslink</groupId>
         <version>1.0.0</version>
     </parent>
-    <dependencies>
-        <dependency>
-            <groupId>com.thingslink</groupId>
-            <artifactId>things-link-core</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>transport-mqtt</artifactId>
@@ -24,5 +17,27 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.thingslink</groupId>
+            <artifactId>things-link-core</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

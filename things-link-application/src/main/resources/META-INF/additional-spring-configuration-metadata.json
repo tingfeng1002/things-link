@@ -1,0 +1,20 @@
+{
+  "groups": [],
+  "properties": [
+    {
+      "name": "thinsLink",
+      "type": "java.lang.String",
+      "description": "thinsLink is IOT Platform."
+    },
+    {
+      "name": "thinsLink.label",
+      "type": "java.lang.String",
+      "description": "label for thinsLink."
+    },
+    {
+      "name": "thinsLink.version",
+      "type": "java.lang.String",
+      "description": "version for thinsLink."
+    }
+  ]
+}
