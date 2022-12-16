@@ -23,7 +23,11 @@
         <dependency>
             <groupId>com.thingslink</groupId>
             <artifactId>things-link-core</artifactId>
-            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.thingslink</groupId>
+            <artifactId>transport-api</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -37,6 +41,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
         </dependency>
     </dependencies>
 

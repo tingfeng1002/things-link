@@ -1,15 +1,23 @@
 spring:
   application:
-    name: ${THINGS_LINK_LABEL:ThingsLink}
-    version: ${THINGS_LINK_VERSION:1.0.0}
+    name: "${THINGS_LINK_LABEL:ThingsLink}"
+    version: "${THINGS_LINK_VERSION:1.0.0}"
 
 server:
-  port: ${THINGS_LINK_WEB_PORT:8080}
+  port: "${THINGS_LINK_WEB_PORT:8080}"
 
 
 thingsLink:
-  label: ${spring.application.name}
-  version: ${spring.application.version}
+  label: "${spring.application.name}"
+  version: "${spring.application.version}"
   transport:
     mqtt:
-      enable: ${TRANSPORT_MQTT_ENABLE:true}
+      enable: "${TRANSPORT_MQTT_ENABLE:true}"
+      host: "${TRANSPORT_MQTT_HOST:0.0.0.0}"
+      port: "${TRANSPORT_MQTT_PORT:1883}"
+      leak_detector_level: "${TRANSPORT_MQTT_LEAK_DETECTOR_LEVEL:DISABLED}"
+      boss_group_thread_count: "${TRANSPORT_MQTT_BOSS_GROUP_THREADS:1}"
+      worker_group_thread_count: "${TRANSPORT_MQTT_WORKER_GROUP_THREADS:12"
+      max_payload_size: "${TRANSPORT_MQTT_MAX_PAYLOAD_SIZE:65535}"
+      keep_alive: "${TRANSPORT_MQTT_KEEP_ALIVE:false}"
+

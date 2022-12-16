@@ -15,17 +15,16 @@ public interface TransportServer {
 
     /**
      * 初始化
+     *
+     * @throws Exception init maybe throw exception
      */
-    void initialize();
-
-    /**
-     * 启动
-     */
-    void  start();
+    void initialize() throws Exception;
 
 
     /**
      * 关闭
+     *
+     * @throws Exception init maybe throw exception
      */
-    void stop();
+    void stop() throws Exception;
 }
