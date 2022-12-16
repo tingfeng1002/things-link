@@ -4,6 +4,8 @@ import com.thingslink.transport.TransportContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * mqtt transport context
  *
@@ -13,4 +15,15 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnExpression("'${transport.mqtt.enabled}'=='true'")
 public class MqttTransportContext extends TransportContext {
+
+
+    private final AtomicInteger connectionsCounter = new AtomicInteger();
+
+    public void channelRegistered() {
+        connectionsCounter.incrementAndGet();
+    }
+
+    public void channelUnregistered() {
+        connectionsCounter.decrementAndGet();
+    }
 }
