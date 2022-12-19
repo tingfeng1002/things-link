@@ -1,4 +1,4 @@
-package com.thingslink.entity;
+package com.thingslink.web.entity;
 
 /**
  * @author wang xiao

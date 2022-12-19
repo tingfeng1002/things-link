@@ -1,4 +1,4 @@
-package com.thingslink.mapper;
+package com.thingslink.web.mapper;
 
 /**
  * @author wang xiao

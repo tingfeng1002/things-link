@@ -1,4 +1,4 @@
-package com.thingslink;
+package com.thingslink.web;
 
 /**
  * SpringBoot application

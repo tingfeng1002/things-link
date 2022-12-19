@@ -1,4 +1,4 @@
-package com.thingslink.service;
+package com.thingslink.web.service;
 
 /**
  * @author wang xiao

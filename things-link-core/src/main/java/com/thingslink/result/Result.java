@@ -1,5 +1,7 @@
 package com.thingslink.result;
 
+import com.thingslink.ThingsLinkException;
+
 import java.io.Serializable;
 
 /**
@@ -35,7 +37,7 @@ public class Result<T> implements Serializable {
 
     /**
      * error
-     * @return  Result
+     * @return Result
      */
     public static <T> Result<T> error() {
         Result<T> r = new Result<>();
@@ -45,9 +47,37 @@ public class Result<T> implements Serializable {
         return r;
     }
 
+    /**
+     * error
+     *
+     * @return Result
+     */
+    public static <T> Result<T> error(Integer code, String message) {
+        Result<T> r = new Result<>();
+        r.setSuccess(ResultCode.UNKNOWN_ERROR.isSuccess());
+        r.setCode(code);
+        r.setMessage(message);
+        return r;
+    }
+
+
+    /**
+     * error
+     *
+     * @return Result
+     */
+    public static <T> Result<T> error(ThingsLinkException exception) {
+        Result<T> r = new Result<>();
+        r.setSuccess(ResultCode.UNKNOWN_ERROR.isSuccess());
+        r.setMessage(exception.getMessage());
+        r.setCode(exception.getCode().orElse(ResultCode.UNKNOWN_ERROR.getCode()));
+        return r;
+    }
+
 
     /**
      * data
+     *
      * @param data T value
      * @return Result
      */

@@ -1,4 +1,4 @@
-package com.thingslink.controller;
+package com.thingslink.web.controller;
 
 /**
  * @author wang xiao
