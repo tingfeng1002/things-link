@@ -5,6 +5,7 @@ import com.thingslink.transport.limit.TransportLimitService;
 import com.thingslink.transport.session.DeviceSessionListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.slf4j.Logger;
@@ -24,6 +25,8 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     private final TransportService transportService;
 
     private final MqttTransportContext transportContext;
+
+
 
 
     public MqttTransportHandler(MqttTransportContext transportContext) {
@@ -46,8 +49,12 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        if (msg instanceof MqttMessage){
 
+        }else {
+            logger.error("");
+        }
     }
 
     @Override
@@ -63,5 +70,13 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     @Override
     public void operationComplete(Future<? super Void> future) {
         logger.trace("Channel operation complete ,will be closed");
+        disConnect();
+    }
+
+    /**
+     * disconnect
+     */
+    private void disConnect() {
+
     }
 }

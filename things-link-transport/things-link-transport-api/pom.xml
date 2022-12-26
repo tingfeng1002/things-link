@@ -29,6 +29,10 @@
             <artifactId>javax.annotation-api</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.thingslink</groupId>
+            <artifactId>things-link-core</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
