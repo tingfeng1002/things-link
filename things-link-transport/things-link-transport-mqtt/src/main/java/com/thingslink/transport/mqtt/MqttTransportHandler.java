@@ -2,6 +2,7 @@ package com.thingslink.transport.mqtt;
 
 import com.thingslink.transport.TransportService;
 import com.thingslink.transport.limit.TransportLimitService;
+import com.thingslink.transport.mqtt.session.MqttDeviceSessionCtx;
 import com.thingslink.transport.session.DeviceSessionListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -27,12 +28,13 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     private final MqttTransportContext transportContext;
 
 
-
+    final MqttDeviceSessionCtx deviceSessionCtx;
 
     public MqttTransportHandler(MqttTransportContext transportContext) {
         this.transportContext = transportContext;
         this.transportService = transportContext.getTransportService();
         this.transportLimitService = transportContext.getTransportLimitService();
+        this.deviceSessionCtx = new MqttDeviceSessionCtx();
     }
 
 
@@ -77,6 +79,9 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      * disconnect
      */
     private void disConnect() {
+        if (deviceSessionCtx.isConnected()){
 
+            deviceSessionCtx.disConnect();
+        }
     }
 }
