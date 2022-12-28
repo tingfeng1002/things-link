@@ -21,4 +21,11 @@ public interface DeviceSessionId {
      * @return ThingsId
      */
     ThingsId getModelId();
+
+
+    /**
+     * 获取sessionId
+     * @return String
+     */
+    String getSessionId();
 }

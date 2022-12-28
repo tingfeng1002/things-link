@@ -18,4 +18,47 @@ public interface ThingsId {
      * @return 实体类型
      */
     ThingsType getThingsType();
+
+
+    /**
+     * 创建 默认匿名 things id
+     * @param id id
+     * @param type thingsType
+     * @return ThingsId
+     */
+
+    static ThingsId createDefaultThingsId(Long id, ThingsType type){
+        return new ThingsId() {
+            @Override
+            public String getId() {
+                return String.valueOf(id);
+            }
+
+            @Override
+            public ThingsType getThingsType() {
+                return type;
+            }
+        };
+    }
+
+
+    /**
+     * 创建 默认匿名 things id
+     * @param id id
+     * @param type thingsType
+     * @return ThingsId
+     */
+    static ThingsId createDefaultThingsId(String id,ThingsType type){
+        return new ThingsId() {
+            @Override
+            public String getId() {
+                return id;
+            }
+
+            @Override
+            public ThingsType getThingsType() {
+                return type;
+            }
+        };
+    }
 }
