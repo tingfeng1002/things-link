@@ -1,5 +1,6 @@
 package com.thingslink.transport;
 
+import com.thingslink.session.DeviceSessionId;
 import com.thingslink.transport.session.DeviceSessionListener;
 import com.thingslink.transport.session.TransportDeviceSessionInfo;
 
@@ -12,19 +13,22 @@ public interface TransportSessionService {
 
     /**
      * 注册session
+     * @param sessionInfo  session info
+     * @param sessionListener  session listener
      */
-
-    void  registerSession(TransportDeviceSessionInfo sessionInfo, DeviceSessionListener);
+    void  registerSession(TransportDeviceSessionInfo sessionInfo, DeviceSessionListener sessionListener);
 
 
     /**
      * 移除session
+     * @param deviceSessionId  device session id
      */
-    void unregisterSession();
+    void unregisterSession(DeviceSessionId deviceSessionId);
 
 
     /**
      * 活跃
+     * @param deviceSessionId device session id
      */
-    void  reportActivity();
+    void  reportActivity(DeviceSessionId deviceSessionId);
 }
