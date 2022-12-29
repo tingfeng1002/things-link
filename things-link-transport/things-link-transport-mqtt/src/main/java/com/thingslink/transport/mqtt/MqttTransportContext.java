@@ -4,6 +4,7 @@ import com.thingslink.transport.TransportContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
+import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -25,5 +26,10 @@ public class MqttTransportContext extends TransportContext {
 
     public void channelUnregistered() {
         connectionsCounter.decrementAndGet();
+    }
+
+
+    public boolean checkAddress(InetSocketAddress address){
+        return transportLimitService.checkAddress(address);
     }
 }

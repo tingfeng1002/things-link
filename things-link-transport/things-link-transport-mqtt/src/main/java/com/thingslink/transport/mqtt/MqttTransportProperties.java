@@ -1,6 +1,9 @@
 package com.thingslink.transport.mqtt;
 
+import io.netty.util.AttributeKey;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.net.InetSocketAddress;
 
 /**
  * mqtt transport properties
@@ -9,6 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
  * date 2022/12/16
  */
 public class MqttTransportProperties {
+
+
+    public static AttributeKey<InetSocketAddress> ADDRESS = AttributeKey.newInstance("SRC_ADDRESS");
 
     /**
      * mqtt host
