@@ -5,6 +5,7 @@ import com.thingslink.transport.limit.TransportLimitService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Map;
@@ -12,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * transport limit service implementation
- * todo : map 什么时候清空了？
  * @author wang xiao
  * date 2022/12/29
  */
@@ -39,6 +39,8 @@ public class DefaultTransportLimitService implements TransportLimitService {
         var inetAddressLimitStats = addressLimitStatsMap.computeIfAbsent(address.getAddress(), inetAddress -> new InetAddressLimitStats());
         return !inetAddressLimitStats.isBlocked() && (inetAddressLimitStats.getLastActivityTs()+ limitTimeout < System.currentTimeMillis());
     }
+
+
 
     @Override
     public void onAuthSuccess(InetSocketAddress address) {
@@ -76,4 +78,11 @@ public class DefaultTransportLimitService implements TransportLimitService {
             inetAddressLimitStats.getLock().unlock();
         }
     }
+
+
+    @PostConstruct
+    public void initialize(){
+
+    }
+
 }
