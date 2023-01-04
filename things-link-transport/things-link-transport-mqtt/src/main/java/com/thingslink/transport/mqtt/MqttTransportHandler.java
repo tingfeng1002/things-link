@@ -4,9 +4,13 @@ import com.thingslink.transport.TransportService;
 import com.thingslink.transport.limit.TransportLimitService;
 import com.thingslink.transport.mqtt.session.MqttDeviceSessionCtx;
 import com.thingslink.transport.session.DeviceSessionListener;
+import com.thingslink.util.CastUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.mqtt.MqttConnectMessage;
+import io.netty.handler.codec.mqtt.MqttConnectPayload;
 import io.netty.handler.codec.mqtt.MqttMessage;
+import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -14,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -26,8 +31,6 @@ import java.util.UUID;
 public class MqttTransportHandler extends ChannelInboundHandlerAdapter implements GenericFutureListener<Future<? super Void>>, DeviceSessionListener {
 
     private final Logger logger = LoggerFactory.getLogger(MqttTransportHandler.class);
-
-    private final TransportLimitService transportLimitService;
 
     private final TransportService transportService;
 
@@ -44,7 +47,6 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     public MqttTransportHandler(MqttTransportContext transportContext) {
         this.transportContext = transportContext;
         this.transportService = transportContext.getTransportService();
-        this.transportLimitService = transportContext.getTransportLimitService();
         this.deviceSessionCtx = new MqttDeviceSessionCtx();
         this.mqttTransportHandleId = UUID.randomUUID();
     }
@@ -69,10 +71,9 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             address = getSocketAddress(ctx);
         }
         try {
-            if (msg instanceof MqttMessage){
-                MqttMessage mqttMessage = (MqttMessage) msg;
+            if (msg instanceof MqttMessage mqttMessage){
                 if (mqttMessage.decoderResult().isSuccess()) {
-                    processMqttMessage(ctx, mqttMessage);
+                    processMessage(ctx, mqttMessage);
                 }else {
                     logger.error("[{}] mqtt message decoder is fail,case: {}",mqttTransportHandleId,mqttMessage.decoderResult().cause());
                     ctx.close();
@@ -99,7 +100,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
 
     @Override
     public void operationComplete(Future<? super Void> future) {
-        logger.trace("Channel operation complete ,will be closed");
+        logger.trace("[{}]Channel operation complete ,will be closed",mqttTransportHandleId);
         disConnect();
     }
 
@@ -132,7 +133,56 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     /**
      * 处理mqtt message
      * @param channelHandlerContext channel handler context
+     * @param message mqtt message
+     */
+    private void processMessage(ChannelHandlerContext channelHandlerContext,MqttMessage message){
+        if (Objects.isNull(message.fixedHeader())) {
+            logger.info("[{}]MQTT message is Invalid,mqtt fixed header is null",mqttTransportHandleId);
+            channelHandlerContext.close();
+            return;
+        }
+        deviceSessionCtx.setChannelHandlerContext(channelHandlerContext);
+        var mqttMessageType = message.fixedHeader().messageType();
+        if (Objects.requireNonNull(mqttMessageType).equals( MqttMessageType.CONNECT)) {
+            processMqttConnectMessage(channelHandlerContext, CastUtil.cast(message));
+        } else {
+            processMqttMessage(channelHandlerContext, CastUtil.cast(message));
+        }
+    }
+
+
+    /**
+     *  处理 connect message
+     * @param channelHandlerContext channel handler context
+     * @param connectMessage mqtt connect message
+     */
+    private void processMqttConnectMessage(ChannelHandlerContext channelHandlerContext, MqttConnectMessage connectMessage){
+        logger.debug("[{}] process Mqtt Connect message",mqttTransportHandleId);
+        processConnectByUsernameClientId(channelHandlerContext,connectMessage);
+    }
+
+
+    /**
+     * 处理 mqtt message
+     * @param channelHandlerContext channel handler context
      * @param mqttMessage mqtt message
      */
-    private void processMqttMessage(ChannelHandlerContext channelHandlerContext,MqttMessage mqttMessage){}
+    private void processMqttMessage(ChannelHandlerContext channelHandlerContext,MqttMessage mqttMessage){
+
+    }
+
+    /**
+     * clientId  username password 认证
+     * @param channelHandlerContext channel handler context
+     * @param connectMessage mqtt connect message
+     */
+    private void processConnectByUsernameClientId(ChannelHandlerContext channelHandlerContext, MqttConnectMessage connectMessage){
+        MqttConnectPayload payload = connectMessage.payload();
+        var  userName = payload.userName();
+        var clientIdentifier = payload.clientIdentifier();
+        var password = new String(payload.passwordInBytes(), StandardCharsets.UTF_8);
+        logger.debug("[{}]Mqtt Connect message,clientId:{},userName:{},password:{}",mqttTransportHandleId,clientIdentifier,userName,password);
+    }
+
+
 }

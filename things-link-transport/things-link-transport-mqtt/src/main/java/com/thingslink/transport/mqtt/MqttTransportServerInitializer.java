@@ -30,7 +30,7 @@ public class MqttTransportServerInitializer extends ChannelInitializer<SocketCha
         channelPipeline.addLast("ipFilter", new IpFilter(transportContext));
         channelPipeline.addLast("decoder", new MqttDecoder(payloadSize));
         channelPipeline.addLast("encoder", MqttEncoder.INSTANCE);
-        MqttTransportHandler transportHandler = new MqttTransportHandler();
+        MqttTransportHandler transportHandler = new MqttTransportHandler(transportContext);
         socketChannel.closeFuture().addListener(transportHandler);
     }
 }
