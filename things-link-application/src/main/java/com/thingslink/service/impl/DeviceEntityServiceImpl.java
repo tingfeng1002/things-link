@@ -1,6 +1,6 @@
-package com.thingslink.web.service.impl;
+package com.thingslink.service.impl;
 
-import com.thingslink.web.service.DeviceEntityService;
+import com.thingslink.service.DeviceEntityService;
 
 /**
  * @author wang xiao

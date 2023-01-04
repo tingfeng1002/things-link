@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author wang xiao
  * date 2023/1/2
  */
-public final class ThingsLinkThreadFactory implements ThreadFactory {
+public final class TlThreadFactory implements ThreadFactory {
 
 
     private static final AtomicInteger POOL_SIZE = new AtomicInteger(1);
@@ -19,7 +19,7 @@ public final class ThingsLinkThreadFactory implements ThreadFactory {
 
     private final AtomicInteger threadNumber = new AtomicInteger(1);
 
-    private ThingsLinkThreadFactory(String namePrefix) {
+    private TlThreadFactory(String namePrefix) {
         this.namePrefix = namePrefix + "-"+POOL_SIZE.getAndIncrement()+"-thread-";
         this.threadGroup = Thread.currentThread().getThreadGroup();
     }

@@ -1,4 +1,4 @@
-package com.thingslink.web.config;
+package com.thingslink.config;
 
 import com.thingslink.ThingsLinkException;
 import com.thingslink.result.Result;

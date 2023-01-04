@@ -9,13 +9,13 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author wang xiao
  * date 2023/1/2
  */
-public class ThingsLinkForkJoinWorkerThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
+public class TlForkJoinWorkerThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
 
     private final String namePrefix;
 
     private final AtomicLong threadNumber = new AtomicLong(1);
 
-    public ThingsLinkForkJoinWorkerThreadFactory(String namePrefix) {
+    public TlForkJoinWorkerThreadFactory(String namePrefix) {
         this.namePrefix = namePrefix;
     }
 

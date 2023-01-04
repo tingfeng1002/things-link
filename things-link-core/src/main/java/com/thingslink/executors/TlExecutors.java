@@ -8,11 +8,11 @@ import java.util.concurrent.ForkJoinPool;
  * @author wang xiao
  * date 2023/1/2
  */
-public class ThingsLinkExecutors {
+public class TlExecutors {
 
     public static ExecutorService newWorkStealingPool(int parallelism, String namePrefix) {
         return new ForkJoinPool(parallelism,
-                new ThingsLinkForkJoinWorkerThreadFactory(namePrefix),
+                new TlForkJoinWorkerThreadFactory(namePrefix),
                 null, true);
     }
 
