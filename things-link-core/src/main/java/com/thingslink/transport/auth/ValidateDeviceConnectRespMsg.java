@@ -2,27 +2,25 @@ package com.thingslink.transport.auth;
 
 import com.thingslink.DeviceProfile;
 
+import java.util.Optional;
+
 /**
- *  设备 连接反馈消息
+ * 设备 连接反馈消息
+ *
  * @author wang xiao
  * date 2023/1/9
  */
-public class ValidateDeviceConnectRespMsg {
+public record ValidateDeviceConnectRespMsg(Optional<DeviceProfile> deviceProfile, String credentials) {
 
-    private final DeviceProfile deviceProfile;
 
-    private final String credentials;
-
-    public ValidateDeviceConnectRespMsg(DeviceProfile deviceProfile, String credentials) {
-        this.deviceProfile = deviceProfile;
-        this.credentials = credentials;
-    }
-
-    public DeviceProfile getDeviceProfile() {
+    @Override
+    public Optional<DeviceProfile> deviceProfile() {
         return deviceProfile;
     }
 
-    public String getCredentials() {
+    @Override
+    public String credentials() {
         return credentials;
     }
+
 }

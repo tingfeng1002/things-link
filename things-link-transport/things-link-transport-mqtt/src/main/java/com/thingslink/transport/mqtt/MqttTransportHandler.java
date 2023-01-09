@@ -1,7 +1,9 @@
 package com.thingslink.transport.mqtt;
 
+import com.thingslink.transport.TransportServiceCallback;
 import com.thingslink.transport.auth.MqttBaseConnectReqMsg;
 import com.thingslink.transport.TransportService;
+import com.thingslink.transport.auth.ValidateDeviceConnectRespMsg;
 import com.thingslink.transport.mqtt.session.MqttDeviceSessionCtx;
 import com.thingslink.transport.session.DeviceSessionListener;
 import com.thingslink.util.CastUtil;
@@ -181,7 +183,17 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         var password = new String(payload.passwordInBytes(), StandardCharsets.UTF_8);
         logger.debug("[{}]Mqtt Connect message,clientId:{},userName:{},password:{}",mqttTransportHandleId,clientIdentifier,userName,password);
         var mqttConnectRequest  = new MqttBaseConnectReqMsg(clientIdentifier,userName,password);
-        transportService.processDeviceMqttBasicAuth(mqttConnectRequest);
+        transportService.processDeviceMqttBasicAuth(mqttConnectRequest, new TransportServiceCallback<>() {
+            @Override
+            public void onSuccess(ValidateDeviceConnectRespMsg msg) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        });
     }
 
 
