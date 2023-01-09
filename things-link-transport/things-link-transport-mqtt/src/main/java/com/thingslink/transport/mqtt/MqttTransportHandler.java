@@ -1,7 +1,7 @@
 package com.thingslink.transport.mqtt;
 
+import com.thingslink.transport.auth.MqttBaseConnectReqMsg;
 import com.thingslink.transport.TransportService;
-import com.thingslink.transport.limit.TransportLimitService;
 import com.thingslink.transport.mqtt.session.MqttDeviceSessionCtx;
 import com.thingslink.transport.session.DeviceSessionListener;
 import com.thingslink.util.CastUtil;
@@ -66,7 +66,6 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-
         if (Objects.isNull(address)){
             address = getSocketAddress(ctx);
         }
@@ -85,7 +84,6 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         }finally {
             ReferenceCountUtil.safeRelease(msg);
         }
-
     }
 
     @Override
@@ -158,7 +156,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      */
     private void processMqttConnectMessage(ChannelHandlerContext channelHandlerContext, MqttConnectMessage connectMessage){
         logger.debug("[{}] process Mqtt Connect message",mqttTransportHandleId);
-        processConnectByUsernameClientId(channelHandlerContext,connectMessage);
+        processMqttBasicConnect(channelHandlerContext,connectMessage);
     }
 
 
@@ -176,12 +174,14 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      * @param channelHandlerContext channel handler context
      * @param connectMessage mqtt connect message
      */
-    private void processConnectByUsernameClientId(ChannelHandlerContext channelHandlerContext, MqttConnectMessage connectMessage){
+    private void processMqttBasicConnect(ChannelHandlerContext channelHandlerContext, MqttConnectMessage connectMessage){
         MqttConnectPayload payload = connectMessage.payload();
         var  userName = payload.userName();
         var clientIdentifier = payload.clientIdentifier();
         var password = new String(payload.passwordInBytes(), StandardCharsets.UTF_8);
         logger.debug("[{}]Mqtt Connect message,clientId:{},userName:{},password:{}",mqttTransportHandleId,clientIdentifier,userName,password);
+        var mqttConnectRequest  = new MqttBaseConnectReqMsg(clientIdentifier,userName,password);
+        transportService.processDeviceMqttBasicAuth(mqttConnectRequest);
     }
 
 

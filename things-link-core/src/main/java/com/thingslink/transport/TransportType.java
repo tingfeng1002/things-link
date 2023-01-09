@@ -15,5 +15,15 @@ public enum TransportType {
     /**
      * HTTP protocol
      */
-    HTTP
+    HTTP,
+
+    /**
+     * tcp protocol
+     */
+    TCP,
+
+    /**
+     * coap protocol
+     */
+    COAP
 }
