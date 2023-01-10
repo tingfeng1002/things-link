@@ -32,4 +32,12 @@ public class MqttTransportContext extends TransportContext {
     public boolean checkAddress(InetSocketAddress address){
         return transportLimitService.checkAddress(address);
     }
+
+    public void onAuthSuccess(InetSocketAddress address) {
+        transportLimitService.onAuthSuccess(address);
+    }
+
+    public void onAuthFailure(InetSocketAddress address) {
+        transportLimitService.onAuthFailure(address);
+    }
 }

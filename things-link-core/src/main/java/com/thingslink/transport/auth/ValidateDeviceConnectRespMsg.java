@@ -10,7 +10,7 @@ import java.util.Optional;
  * @author wang xiao
  * date 2023/1/9
  */
-public record ValidateDeviceConnectRespMsg(Optional<DeviceProfile> deviceProfile, String credentials) {
+public record ValidateDeviceConnectRespMsg(Optional<DeviceProfile> deviceProfile, String clientId) {
 
 
     @Override
@@ -19,8 +19,7 @@ public record ValidateDeviceConnectRespMsg(Optional<DeviceProfile> deviceProfile
     }
 
     @Override
-    public String credentials() {
-        return credentials;
+    public String clientId() {
+        return clientId;
     }
-
 }

@@ -1,18 +1,17 @@
 package com.thingslink.transport.mqtt;
 
+import com.thingslink.DeviceProfile;
 import com.thingslink.transport.TransportServiceCallback;
 import com.thingslink.transport.auth.MqttBaseConnectReqMsg;
 import com.thingslink.transport.TransportService;
 import com.thingslink.transport.auth.ValidateDeviceConnectRespMsg;
 import com.thingslink.transport.mqtt.session.MqttDeviceSessionCtx;
+import com.thingslink.transport.mqtt.support.MqttMessages;
 import com.thingslink.transport.session.DeviceSessionListener;
 import com.thingslink.util.CastUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.mqtt.MqttConnectMessage;
-import io.netty.handler.codec.mqtt.MqttConnectPayload;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import io.netty.handler.codec.mqtt.MqttMessageType;
+import io.netty.handler.codec.mqtt.*;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -22,7 +21,10 @@ import org.slf4j.LoggerFactory;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
+
+import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_REFUSED_NOT_AUTHORIZED;
 
 /**
  * mqtt transport handler
@@ -183,18 +185,40 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         var password = new String(payload.passwordInBytes(), StandardCharsets.UTF_8);
         logger.debug("[{}]Mqtt Connect message,clientId:{},userName:{},password:{}",mqttTransportHandleId,clientIdentifier,userName,password);
         var mqttConnectRequest  = new MqttBaseConnectReqMsg(clientIdentifier,userName,password);
+        var cleanSession = connectMessage.variableHeader().isCleanSession();
         transportService.processDeviceMqttBasicAuth(mqttConnectRequest, new TransportServiceCallback<>() {
             @Override
             public void onSuccess(ValidateDeviceConnectRespMsg msg) {
-
+                logger.trace("[{}] mqtt connect success by clientId:{},username:{},password:{}", mqttTransportHandleId,clientIdentifier,userName,password);
+                onMqttConnectSuccess(channelHandlerContext,msg,cleanSession);
             }
 
             @Override
             public void onError(Throwable e) {
-
+                logger.error("[{}] mqtt connect failed by clientId:{},username:{},password:{} why:{}", mqttTransportHandleId,clientIdentifier,userName,password,e.getMessage());
+                channelHandlerContext.writeAndFlush(MqttMessages.createMqttConnAckMsg(MqttConnectReturnCode.CONNECTION_REFUSED_SERVER_UNAVAILABLE, cleanSession));
+                channelHandlerContext.close();
             }
         });
     }
 
+
+    /**
+     * mqtt connect success callback
+     * @param channelHandlerContext channel handler context
+     * @param msg respMsg
+     */
+    private void onMqttConnectSuccess (ChannelHandlerContext channelHandlerContext,ValidateDeviceConnectRespMsg msg,boolean cleanSession) {
+        var mqttClientId = msg.clientId();
+        Optional<DeviceProfile> deviceProfile = msg.deviceProfile();
+        deviceProfile.ifPresentOrElse(profile->{
+            // TODO  deviceProfile is not null
+        },()-> {
+            logger.trace("[{}] mqtt connect success by clientId:{},but deviceProfile is null, will be close", mqttTransportHandleId,mqttClientId);
+            transportContext.onAuthFailure(address);
+            channelHandlerContext.writeAndFlush(MqttMessages.createMqttConnAckMsg(CONNECTION_REFUSED_NOT_AUTHORIZED,cleanSession ));
+            channelHandlerContext.close();
+        });
+    }
 
 }
