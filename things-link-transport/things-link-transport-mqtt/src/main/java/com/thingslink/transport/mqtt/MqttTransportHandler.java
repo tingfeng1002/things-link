@@ -1,11 +1,10 @@
 package com.thingslink.transport.mqtt;
 
 import com.thingslink.DeviceProfile;
-import com.thingslink.ServiceCallback;
 import com.thingslink.session.SessionEvent;
+import com.thingslink.transport.TransportService;
 import com.thingslink.transport.TransportServiceCallback;
 import com.thingslink.transport.auth.MqttBaseConnectReqMsg;
-import com.thingslink.transport.TransportService;
 import com.thingslink.transport.auth.ValidateDeviceConnectRespMsg;
 import com.thingslink.transport.mqtt.session.MqttDeviceSessionCtx;
 import com.thingslink.transport.mqtt.support.MqttMessages;
@@ -13,7 +12,10 @@ import com.thingslink.transport.session.DeviceSessionListener;
 import com.thingslink.util.CastUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.mqtt.*;
+import io.netty.handler.codec.mqtt.MqttConnectMessage;
+import io.netty.handler.codec.mqtt.MqttConnectPayload;
+import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
+import io.netty.handler.codec.mqtt.MqttMessage;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
