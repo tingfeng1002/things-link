@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public abstract class DeviceAwareSessionContext implements DeviceSession {
 
-    private DeviceSessionId deviceSessionId;
+    protected volatile DeviceSessionId deviceSessionId;
 
     private long lastConnectTime;
 
@@ -20,7 +20,6 @@ public abstract class DeviceAwareSessionContext implements DeviceSession {
 
     private volatile boolean connected;
 
-    
 
     @Override
     public DeviceSessionId getDeviceSessionId() {
@@ -35,19 +34,6 @@ public abstract class DeviceAwareSessionContext implements DeviceSession {
     @Override
     public UUID getTransportChannelId() {
         return transportChannelId;
-    }
-
-
-    public void setDeviceSessionId(DeviceSessionId deviceSessionId) {
-        this.deviceSessionId = deviceSessionId;
-    }
-
-    public void setLastConnectTime(long lastConnectTime) {
-        this.lastConnectTime = lastConnectTime;
-    }
-
-    public void setTransportChannelId(UUID transportChannelId) {
-        this.transportChannelId = transportChannelId;
     }
 
 

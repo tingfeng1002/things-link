@@ -1,13 +1,11 @@
-package com.thingslink.transport.session;
-
-import com.thingslink.session.DeviceSessionId;
+package com.thingslink.session;
 
 /**
  * transport device session info
  * @author wang xiao
  * date 2022/12/28
  */
-public class TransportDeviceSessionInfo {
+public class DeviceSessionInfo {
 
     private DeviceSessionId deviceSessionId;
 

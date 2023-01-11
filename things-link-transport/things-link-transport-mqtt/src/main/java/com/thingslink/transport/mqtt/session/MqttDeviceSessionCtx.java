@@ -1,6 +1,9 @@
 package com.thingslink.transport.mqtt.session;
 
+import com.thingslink.DeviceProfile;
+import com.thingslink.session.DeviceSessionId;
 import com.thingslink.transport.session.DeviceAwareSessionContext;
+import com.thingslink.transport.session.TransportDeviceSessionId;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
@@ -10,9 +13,24 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public class MqttDeviceSessionCtx extends DeviceAwareSessionContext {
 
+    private DeviceProfile deviceProfile;
 
     private ChannelHandlerContext channelHandlerContext;
 
+
+    public DeviceSessionId initSession(){
+        this.deviceSessionId = new TransportDeviceSessionId(deviceProfile.getDeviceId(), deviceProfile.getModelId());
+        return this.deviceSessionId;
+    }
+
+
+    public DeviceProfile getDeviceProfile() {
+        return deviceProfile;
+    }
+
+    public void setDeviceProfile(DeviceProfile deviceProfile) {
+        this.deviceProfile = deviceProfile;
+    }
 
     public ChannelHandlerContext getChannelHandlerContext() {
         return channelHandlerContext;

@@ -1,6 +1,8 @@
 package com.thingslink.transport.mqtt;
 
 import com.thingslink.DeviceProfile;
+import com.thingslink.ServiceCallback;
+import com.thingslink.session.SessionEvent;
 import com.thingslink.transport.TransportServiceCallback;
 import com.thingslink.transport.auth.MqttBaseConnectReqMsg;
 import com.thingslink.transport.TransportService;
@@ -24,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_ACCEPTED;
 import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_REFUSED_NOT_AUTHORIZED;
 
 /**
@@ -112,6 +115,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      */
     private void disConnect() {
         if (deviceSessionCtx.isConnected()){
+            transportService.processSessionEvent(deviceSessionCtx.getDeviceSessionId(), SessionEvent.DISCONNECT, null);
             transportService.unregisterSession(deviceSessionCtx.getDeviceSessionId());
             deviceSessionCtx.disConnect();
         }
@@ -145,10 +149,10 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         }
         deviceSessionCtx.setChannelHandlerContext(channelHandlerContext);
         var mqttMessageType = message.fixedHeader().messageType();
-        if (Objects.requireNonNull(mqttMessageType).equals( MqttMessageType.CONNECT)) {
-            processMqttConnectMessage(channelHandlerContext, CastUtil.cast(message));
-        } else {
-            processMqttMessage(channelHandlerContext, CastUtil.cast(message));
+        switch (mqttMessageType){
+            case CONNECT ->  processMqttConnectMessage(channelHandlerContext, CastUtil.cast(message));
+            case DISCONNECT -> disConnect();
+            default -> processMqttMessage(channelHandlerContext, CastUtil.cast(message));
         }
     }
 
@@ -212,8 +216,26 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         var mqttClientId = msg.clientId();
         Optional<DeviceProfile> deviceProfile = msg.deviceProfile();
         deviceProfile.ifPresentOrElse(profile->{
-            // TODO  deviceProfile is not null
+            transportContext.onAuthSuccess(address);
+            deviceSessionCtx.setDeviceProfile(profile);
+            var sessionId = deviceSessionCtx.initSession();
+            transportService.processSessionEvent(sessionId, SessionEvent.CONNECT, new TransportServiceCallback<Void>() {
+                @Override
+                public void onSuccess(Void msg) {
+                    deviceSessionCtx.connect();
+                    transportService.registerSession(sessionId,MqttTransportHandler.this);
+                    channelHandlerContext.writeAndFlush(MqttMessages.createMqttConnAckMsg(CONNECTION_ACCEPTED, cleanSession));
+                    logger.debug("[{}] Client :{} connected!", mqttTransportHandleId,mqttClientId);
+                }
+                @Override
+                public void onError(Throwable e) {
+                    logger.error("[{}] process mqtt session event failed by clientId:{}, why:{}", mqttTransportHandleId,mqttClientId,e.getMessage());
+                    channelHandlerContext.writeAndFlush(MqttMessages.createMqttConnAckMsg(MqttConnectReturnCode.CONNECTION_REFUSED_SERVER_UNAVAILABLE, cleanSession));
+                    channelHandlerContext.close();
+                }
+            });
         },()-> {
+            // why deviceProfile is null,maybe device status is disabled
             logger.trace("[{}] mqtt connect success by clientId:{},but deviceProfile is null, will be close", mqttTransportHandleId,mqttClientId);
             transportContext.onAuthFailure(address);
             channelHandlerContext.writeAndFlush(MqttMessages.createMqttConnAckMsg(CONNECTION_REFUSED_NOT_AUTHORIZED,cleanSession ));

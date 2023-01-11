@@ -13,9 +13,7 @@ public class TransportDeviceSessionId implements DeviceSessionId {
 
     private final Long deviceId;
 
-
     private final Long modelId;
-
 
     private final String sessionId;
 
