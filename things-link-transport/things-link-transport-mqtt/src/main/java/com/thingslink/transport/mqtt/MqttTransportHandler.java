@@ -114,7 +114,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      * disconnect
      */
     private void disConnect() {
-        if (deviceSessionCtx.isConnected()){
+        if (checkConnected()){
             transportService.processSessionEvent(deviceSessionCtx.getDeviceSessionId(), SessionEvent.DISCONNECT, null);
             transportService.unregisterSession(deviceSessionCtx.getDeviceSessionId());
             deviceSessionCtx.disConnect();
@@ -151,10 +151,16 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         var mqttMessageType = message.fixedHeader().messageType();
         switch (mqttMessageType){
             case CONNECT ->  processMqttConnectMessage(channelHandlerContext, CastUtil.cast(message));
-            case DISCONNECT -> disConnect();
-            case PINGREQ -> processMqttPingReqMsg(channelHandlerContext, message);
-            case PINGRESP -> ;
-
+            case DISCONNECT -> {
+                disConnect();
+                channelHandlerContext.close();
+            }
+            case PINGREQ -> processMqttPingReqMsg(channelHandlerContext);
+            case PUBLISH -> processMqttPublishMessage(channelHandlerContext,CastUtil.cast(message));
+            case PUBACK -> processMqttPubAckMessage(channelHandlerContext,CastUtil.cast(message));
+            case SUBSCRIBE -> processMqttSubscribeMessage(channelHandlerContext,CastUtil.cast(message));
+            case UNSUBSCRIBE -> processMqttUnSubscribeMessage(channelHandlerContext,CastUtil.cast(message));
+            default -> {}
         }
     }
 
@@ -229,7 +235,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
                 }
             });
         },()-> {
-            // why deviceProfile is null,maybe device status is disabled
+            // why deviceProfile is null,maybe device status is disabled or code append error
             logger.trace("[{}] mqtt connect success by clientId:{},but deviceProfile is null, will be close", mqttTransportHandleId,mqttClientId);
             transportContext.onAuthFailure(address);
             channelHandlerContext.writeAndFlush(MqttMessages.createMqttConnAckMsg(CONNECTION_REFUSED_NOT_AUTHORIZED,cleanSession ));
@@ -237,16 +243,65 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         });
     }
 
-    private void processMqttPingReqMsg(ChannelHandlerContext channelHandlerContext,MqttMessage mqttMessage){
-        if (checkConnected(channelHandlerContext, mqttMessage)) {
+
+    /**
+     *  处理mqtt ping request message
+     * @param channelHandlerContext channel handler context
+     */
+    private void processMqttPingReqMsg(ChannelHandlerContext channelHandlerContext){
+        if (checkConnected()) {
             channelHandlerContext.writeAndFlush(MqttMessages.createMqttPingRespMessage());
             transportService.reportActivity(deviceSessionCtx.getDeviceSessionId());
         }
     }
 
 
-    private boolean checkConnected(ChannelHandlerContext channelHandlerContext,MqttMessage mqttMessage){
-        return false;
+    /**
+     *  check device connect status
+     * @return boolean
+     */
+    private boolean checkConnected(){
+        return deviceSessionCtx.isConnected();
+    }
+
+
+    /**
+     * 处理 publish message
+     * @param channelHandlerContext channel handler context
+     * @param publishMessage publish message
+     */
+    private void processMqttPublishMessage (ChannelHandlerContext channelHandlerContext,MqttPublishMessage publishMessage){
+
+    }
+
+
+    /**
+     * 处理 publish ack message
+     * @param channelHandlerContext channel handler context
+     * @param pubAckMessage pubAck message
+     */
+    private void processMqttPubAckMessage (ChannelHandlerContext channelHandlerContext,MqttPubAckMessage pubAckMessage){
+
+    }
+
+
+    /**
+     * 处理 subscribe message
+     * @param channelHandlerContext channel handler context
+     * @param subscribeMessage subscribe message
+     */
+    private void processMqttSubscribeMessage (ChannelHandlerContext channelHandlerContext,MqttSubscribeMessage subscribeMessage){
+
+    }
+
+
+    /**
+     * 处理 unsubscribe message
+     * @param channelHandlerContext channel handler context
+     * @param unsubscribeMessage unsubscribe message
+     */
+    private void processMqttUnSubscribeMessage (ChannelHandlerContext channelHandlerContext,MqttUnsubscribeMessage unsubscribeMessage){
+
     }
 
 }
