@@ -12,10 +12,7 @@ import com.thingslink.transport.session.DeviceSessionListener;
 import com.thingslink.util.CastUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.mqtt.MqttConnectMessage;
-import io.netty.handler.codec.mqtt.MqttConnectPayload;
-import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
-import io.netty.handler.codec.mqtt.MqttMessage;
+import io.netty.handler.codec.mqtt.*;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -30,6 +27,8 @@ import java.util.UUID;
 
 import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_ACCEPTED;
 import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_REFUSED_NOT_AUTHORIZED;
+import static io.netty.handler.codec.mqtt.MqttMessageType.PINGRESP;
+import static io.netty.handler.codec.mqtt.MqttQoS.AT_MOST_ONCE;
 
 /**
  * mqtt transport handler
@@ -81,7 +80,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         try {
             if (msg instanceof MqttMessage mqttMessage){
                 if (mqttMessage.decoderResult().isSuccess()) {
-                    processMessage(ctx, mqttMessage);
+                    processMqttMessage(ctx, mqttMessage);
                 }else {
                     logger.error("[{}] mqtt message decoder is fail,case: {}",mqttTransportHandleId,mqttMessage.decoderResult().cause());
                     ctx.close();
@@ -113,7 +112,6 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
 
     /**
      * disconnect
-     * todo transport service process disconnect
      */
     private void disConnect() {
         if (deviceSessionCtx.isConnected()){
@@ -143,7 +141,7 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      * @param channelHandlerContext channel handler context
      * @param message mqtt message
      */
-    private void processMessage(ChannelHandlerContext channelHandlerContext,MqttMessage message){
+    private void processMqttMessage(ChannelHandlerContext channelHandlerContext,MqttMessage message){
         if (Objects.isNull(message.fixedHeader())) {
             logger.info("[{}]MQTT message is Invalid,mqtt fixed header is null",mqttTransportHandleId);
             channelHandlerContext.close();
@@ -154,7 +152,9 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
         switch (mqttMessageType){
             case CONNECT ->  processMqttConnectMessage(channelHandlerContext, CastUtil.cast(message));
             case DISCONNECT -> disConnect();
-            default -> processMqttMessage(channelHandlerContext, CastUtil.cast(message));
+            case PINGREQ -> processMqttPingReqMsg(channelHandlerContext, message);
+            case PINGRESP -> ;
+
         }
     }
 
@@ -170,14 +170,6 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
     }
 
 
-    /**
-     * 处理 mqtt message
-     * @param channelHandlerContext channel handler context
-     * @param mqttMessage mqtt message
-     */
-    private void processMqttMessage(ChannelHandlerContext channelHandlerContext,MqttMessage mqttMessage){
-
-    }
 
     /**
      * clientId  username password 认证
@@ -243,6 +235,18 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
             channelHandlerContext.writeAndFlush(MqttMessages.createMqttConnAckMsg(CONNECTION_REFUSED_NOT_AUTHORIZED,cleanSession ));
             channelHandlerContext.close();
         });
+    }
+
+    private void processMqttPingReqMsg(ChannelHandlerContext channelHandlerContext,MqttMessage mqttMessage){
+        if (checkConnected(channelHandlerContext, mqttMessage)) {
+            channelHandlerContext.writeAndFlush(MqttMessages.createMqttPingRespMessage());
+            transportService.reportActivity(deviceSessionCtx.getDeviceSessionId());
+        }
+    }
+
+
+    private boolean checkConnected(ChannelHandlerContext channelHandlerContext,MqttMessage mqttMessage){
+        return false;
     }
 
 }
