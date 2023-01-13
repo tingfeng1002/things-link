@@ -27,8 +27,6 @@ import java.util.UUID;
 
 import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_ACCEPTED;
 import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_REFUSED_NOT_AUTHORIZED;
-import static io.netty.handler.codec.mqtt.MqttMessageType.PINGRESP;
-import static io.netty.handler.codec.mqtt.MqttQoS.AT_MOST_ONCE;
 
 /**
  * mqtt transport handler
@@ -271,7 +269,12 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      * @param publishMessage publish message
      */
     private void processMqttPublishMessage (ChannelHandlerContext channelHandlerContext,MqttPublishMessage publishMessage){
-
+        if (!deviceSessionCtx.isConnected()) {
+            return;
+        }
+        var topic = publishMessage.variableHeader().topicName();
+        var packetId = publishMessage.variableHeader().packetId();
+        logger.trace("[{}] process mqtt publish message,topic:{},packetId:{}",mqttTransportHandleId, topic, packetId);
     }
 
 
@@ -281,7 +284,11 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      * @param pubAckMessage pubAck message
      */
     private void processMqttPubAckMessage (ChannelHandlerContext channelHandlerContext,MqttPubAckMessage pubAckMessage){
-
+        if (!deviceSessionCtx.isConnected()) {
+            return;
+        }
+        var messageId = pubAckMessage.variableHeader().messageId();
+        logger.trace("[{}] process mqtt publish ack message,messageId:{}",mqttTransportHandleId,  messageId);
     }
 
 
@@ -291,7 +298,9 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      * @param subscribeMessage subscribe message
      */
     private void processMqttSubscribeMessage (ChannelHandlerContext channelHandlerContext,MqttSubscribeMessage subscribeMessage){
-
+        if (!deviceSessionCtx.isConnected()) {
+            return;
+        }
     }
 
 
@@ -301,7 +310,9 @@ public class MqttTransportHandler extends ChannelInboundHandlerAdapter implement
      * @param unsubscribeMessage unsubscribe message
      */
     private void processMqttUnSubscribeMessage (ChannelHandlerContext channelHandlerContext,MqttUnsubscribeMessage unsubscribeMessage){
-
+        if (!deviceSessionCtx.isConnected()) {
+            return;
+        }
     }
 
 }
